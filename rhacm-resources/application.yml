@@ -7,7 +7,7 @@ metadata:
 apiVersion: apps.open-cluster-management.io/v1
 kind: Channel
 metadata:
-  name: mariadb-app-latest
+  name: mariadb-app
   namespace: mariadb
 spec:
   type: GitHub
@@ -40,7 +40,7 @@ metadata:
   annotations:
     apps.open-cluster-management.io/github-path: mariadb-resources
 spec:
-  channel: mariadb/mariadb-app-latest
+  channel: mariadb/mariadb-app
   placement:
     placementRef:
       kind: PlacementRule
