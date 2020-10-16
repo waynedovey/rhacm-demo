@@ -10,25 +10,21 @@ metadata:
   name: mariadb-app
   namespace: mariadb
 spec:
-  type: GitHub
-  pathname: https://github.com/michaelkotelnikov/rhacm-demo.git
+  type: Git
+  pathname: https://gitlab.com/michael.kot/rhacm-demo.git
 ---
-apiVersion: app.k8s.io/v1beta1
-kind: Application
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
 metadata:
-  name: mariadb-app
+  name: dev-clusters
   namespace: mariadb
 spec:
-  componentKinds:
-  - group: apps.open-cluster-management.io
-    kind: Subscription
-  descriptor: {}
-  selector:
-    matchExpressions:
-    - key: app
-      operator: In
-      values:
-      - mariadb-app
+  clusterConditions:
+    - type: ManagedClusterConditionAvailable
+      status: "True"
+  clusterSelector:
+    matchLabels:
+      environment: dev
 ---
 apiVersion: apps.open-cluster-management.io/v1
 kind: Subscription
@@ -46,15 +42,19 @@ spec:
       kind: PlacementRule
       name: dev-clusters
 ---
-apiVersion: apps.open-cluster-management.io/v1
-kind: PlacementRule
+apiVersion: app.k8s.io/v1beta1
+kind: Application
 metadata:
-  name: dev-clusters
+  name: mariadb-app
   namespace: mariadb
 spec:
-  clusterConditions:
-    - type: ManagedClusterConditionAvailable
-      status: "True"
-  clusterSelector:
-    matchLabels:
-      environment: dev
+  componentKinds:
+  - group: apps.open-cluster-management.io
+    kind: Subscription
+  descriptor: {}
+  selector:
+    matchExpressions:
+    - key: app
+      operator: In
+      values:
+      - mariadb-app
