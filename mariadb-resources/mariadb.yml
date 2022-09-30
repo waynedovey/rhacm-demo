@@ -1,21 +1,25 @@
-apiVersion: apps.openshift.io/v1
-kind: DeploymentConfig
+kind: Deployment
+apiVersion: apps/v1
 metadata:
   name: mariadb
   labels:
     app: mariadb
-    type: database
+    app.kubernetes.io/component: mariadb
+    app.kubernetes.io/instance: mariadb
+    app.kubernetes.io/name: mariadb
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
   template:
     metadata:
       labels:
         app: mariadb
-        type: database
     spec:
       containers:
         - name: mariadb
-          image: rhscl/mariadb-102-rhel7
+          image: quay.io/wdovey/rhscl/mariadb-105-rhel:latest
           ports:
             - containerPort: 3306
               name: db-port
@@ -24,4 +28,17 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mariadb
-                  key: MYSQL_ROOT_PASSWORD
+                  key: MYSQL_ROOT_PASSWORD          
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+status: {}
