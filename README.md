@@ -1,2 +1,2 @@
 # rhacm-demo
-A Mysql demo for RHACM article
+A MYSQL demo for RHACM article
