@@ -1,2 +1,2 @@
 # rhacm-demo
-A MariaDB demo for RHACM article
+A Mysql demo for RHACM article
